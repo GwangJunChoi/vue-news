@@ -129,3 +129,48 @@ export const router = new VueRouter({
 ```
 * [케밥 케이스 컴포넌트 스타일 가이드 (Essential)](https://vuejs.org/v2/style-guide/#Multi-word-component-names-essential)
 * [파스칼 케이스 컴포넌트 스타일 가이드 (Strongly Recommended)](https://vuejs.org/v2/style-guide/#Component-name-casing-in-templates-strongly-recommended)
+
+>##### axios 설치
+* vue 비동기 통신
+```
+npm i axios --save
+```
+```
+//node_modules 폴더 axios 사용
+import axios from 'axios'
+
+axios.get(``)
+  .then(response => {})
+  .catch(error => {})
+```
+>###### es6 화살표 함수 this
+```
+//this works
+fetchNewsList()
+  .then(response => {
+    this.users = response.data;
+  })
+  .catch(error => {
+    console.log(error);
+  });
+```
+```
+//this not works
+fetchNewsList()
+  .then(function(response) => {
+    this.users = response.data;
+  })
+  .catch(function(error) => {
+    console.log(error);
+  });
+```
+```
+var vm = this;
+fetchNewsList()
+  .then(function(response) => {
+    vm.users = response.data;
+  })
+  .catch(function(error) => {
+    console.log(error);
+  });
+```
