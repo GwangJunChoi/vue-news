@@ -174,3 +174,57 @@ fetchNewsList()
     console.log(error);
   });
 ```
+>##### js 비동기
+* [비동기 처리와 콜백 함수](https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/)
+* Promise 객체 뒤에만 then catch 사용 가능
+* [Promise MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+* [프로미스 쉽게 이해하기 글 주소](https://joshua1988.github.io/web-development/javascript/promise-for-beginners/)
+```
+//promise
+function callajax(){
+  return new Promise(function(resolve, reject){
+          $.ajax({
+            url:'',
+            success: function(data){
+              resolve(data);
+            },
+          });
+        });
+}
+callajax()
+  .then(function(data){
+
+  });
+```
+# vuex
+>##### vuex 설치
+```
+npm i vuex
+```
+>##### vuex flow
+```
+callAPI -> Actions -> (commit) -> Mutations -> (Mutate) -> State -> (Reder) -> Vue Components
+```
+```
+//actinos -> (commit)
+//context 객체로 mutations 접근
+actions: {
+    FETCH_NEWS(context) {
+      fetchNewsList()
+        .then(response => {
+          context.commit('SET_NEWS', response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  } 
+```
+```
+//actinos -> (Mutate)
+mutations: {
+  SET_NEWS(state, data) {
+    state.news = data;
+  }
+},
+```
