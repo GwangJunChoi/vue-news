@@ -228,3 +228,60 @@ mutations: {
   }
 },
 ```
+>##### mapState (Object Spread Operator)
+```
+import { mapState, mapGetters } from 'vuex'
+
+export default {
+  computed: {
+    ...mapGetters([
+      'fetchedAsk',
+    ])
+    // ...mapGetters({
+    //   ask : 'fetchedAsk',
+    // })
+    // ...mapState({
+    //   ask: state => state.ask
+    // })
+  },
+  created() {
+    this.$store.dispatch('FETCH_ASK');
+  }
+}
+```
+# 동적 라우트 매칭 원리 및 적용
+* [Dynamic Route Matching 공식 문서](https://router.vuejs.org/guide/essentials/dynamic-matching.html)
+* [해커 뉴스 API 문서 주소](https://github.com/tastejs/hacker-news-pwas/blob/master/docs/api.md)
+* [ES6 템플릿 리터럴 설명 글(e북)](https://joshua1988.github.io/es6-online-book/template-literal.html)
+>##### routes/index.js
+```
+import Vue from "vue";
+import VueRouter from "vue-router";
+import UserView from "../views/UserView.vue";
+
+Vue.use(VueRouter);
+
+export const router = new VueRouter({
+  mode: 'history',
+  routes: [
+    {
+      path: '/user/:id',
+      component: UserView
+    }
+  ]
+});
+```
+>##### vue page anchor tag
+```
+<router-link v-bind:to="'/user' + item.user">{{ item.user }}</router-link>
+<router-link v-bind:to="`/user/${item.user}`">{{ item.user }}</router-link>
+```
+>##### views/UserView.vue
+```
+export default {
+    created() {
+        const userName = this.$route.params.id;
+        this.$store.dispatch('FETCH_USER', userName);
+    }
+}
+```
