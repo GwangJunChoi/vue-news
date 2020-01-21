@@ -285,3 +285,28 @@ export default {
     }
 }
 ```
+>##### v-html
+* [v-html API 문서](https://vuejs.org/v2/api/#v-html)
+* [v-html과 데이터 바인딩 차이점 문서](https://vuejs.org/v2/guide/syntax.html#Raw-HTML)
+* html 태그 그래도 적용 
+```
+<div v-html="fetchedItem.content"></div>
+```
+
+>##### router Transition
+* [라우터 트랜지션 문서](https://router.vuejs.org/guide/advanced/transitions.html#per-route-transition)
+* [뷰트랜지션 문서](https://vuejs.org/v2/guide/transitions.html)
+```
+<transition name="fade">
+  <router-view></router-view>
+</transition>
+```
+```
+//style
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+```
