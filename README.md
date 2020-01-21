@@ -310,3 +310,18 @@ export default {
   opacity: 0;
 }
 ```
+>##### route name
+```
+//routes/index.js
+{
+  // path: url 주소
+  path: '/news',
+  name: 'news',
+  // componetn: url 주소로 갔을 때 표시될 컴포넌트
+  component: NewsView,
+},
+```
+```
+//components/ vue 파일
+console.log(this.$route.name);
+```
