@@ -325,3 +325,164 @@ export default {
 //components/ vue 파일
 console.log(this.$route.name);
 ```
+
+>##### slot
+* 상위 컴포넌트에서 내용을 채움
+```
+//components/UserProfile.vue
+<template>
+  <div class="user-container">
+    <div>
+        <i class="fas fa-user"></i>
+    </div>
+    <div class="user-descrition">
+      <slot name="username"></slot>            
+      <div class="time">
+        <slot name="time"></slot>
+      </div>
+      <slot name="karma"></slot>
+    </div>
+  </div>
+</template>
+```
+```
+//views/ItemView.vue
+<template>
+  <div>
+    <section>
+      <user-profile>
+        <div slot="username">{{ fetchedItem.user }}</div>
+        <template slot="time">{{ fetchedItem.time_ago }}</template>
+      </user-profile> 
+    </section>    
+  </div>
+</template>
+<script>
+import { mapGetters } from 'vuex';
+import UserProfile from '../components/UserProfile.vue';
+
+export default {
+  components: {
+    UserProfile,
+  },
+  computed: {
+    ...mapGetters(['fetchedItem']),    
+  },
+  created() {
+    const itemId = this.$route.params.id;
+    this.$store.dispatch('FETCH_ITEM', itemId);
+  },
+}
+</script>
+```
+```
+//views/UserView.vue
+<template>  
+  <div>
+    <user-profile>
+      <div slot="username">{{ userInfo.id }}</div>
+      <template slot="time">{{ userInfo.created }}</template>
+      <div slot="karma">{{ userInfo.karma }}</div>
+    </user-profile>
+    <!-- <p>id : {{ userInfo.id }}</p>
+    <p>karma : {{ userInfo.karma }}</p>
+    <p>created : {{ userInfo.created }}</p>
+    <p>{{ userInfo.about }}</p> -->
+  </div>  
+</template>
+<script>
+import UserProfile from '../components/UserProfile.vue';
+
+export default {
+  components: {
+    UserProfile,
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.user;
+    }
+  },
+  created() {
+    const userName = this.$route.params.id;
+    this.$store.dispatch('FETCH_USER', userName);
+  },
+}
+</script>
+```
+# 컴포넌트 재활용 
+>##### mixin 
+
+>##### HOC
+* 컴포넌트 코드 재사용
+* 같은 ui/ux 재사용
+```
+//views/createListView.js
+import ListView from './ListView.vue';
+import bus from "../utils/bus.js";
+
+export default function createListView(name) {
+  return {
+    //재사용 인스턴스(컴포넌트) 옵션
+    name: 'HOC Component',,,,,,,,,,,,,
+    created() {
+      bus.$emit("start:spinner");
+      setTimeout(() => {
+        this.$store
+          .dispatch("FETCH_LIST", this.$route.name)
+          .then(() => {
+            bus.$emit("end:spinner");
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }, 1000);
+    },
+    render(createElement) {
+      return createElement(ListView);
+    },
+  }
+}
+```
+```
+//routes/index.js
+import Vue from "vue";
+import VueRouter from "vue-router";
+import CreateListView from '../views/CreateListView.js';
+
+Vue.use(VueRouter);
+
+export const router = new VueRouter({
+         mode: "history",
+         routes: [
+           {
+             path: "/",
+             redirect: "news"
+           },
+           {
+             // path: url 주소
+             path: "/news",
+             name: "news",
+             // componetn: url 주소로 갔을 때 표시될 컴포넌트
+             //component: NewsView,
+             component: CreateListView("NewsView")
+           },
+         ]
+       });
+```
+```
+//views/ListView.vue
+<template>
+  <div>
+    <list-item></list-item>
+  </div>
+</template>
+
+<script>
+import ListItem from '../components/ListItem.vue';
+export default {
+  components: {
+    ListItem,
+  }
+}
+</script>
+```
