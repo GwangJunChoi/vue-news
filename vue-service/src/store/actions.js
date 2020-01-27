@@ -7,30 +7,39 @@ import {
 export default {
   //ES6 Destructuring
   FETCH_USER({ commit }, name) {
-    fetchUserInfo(name)
-      .then(({ data }) => {
-        commit("SET_USER", data);
+    return fetchUserInfo(name)
+      .then(response => {
+        commit("SET_USER", response.data);
+        return response;
       })
       .catch(error => {
         console.log(error);
       });
   },
   FETCH_ITEM({ commit }, id) {
-    fetchCommentItem(id)
+    return fetchCommentItem(id)
       .then(({ data }) => {
         commit("SET_ITEM", data);
+        return data;
       })
       .catch(error => {
         console.log(error);
       });
   },
-  FETCH_LIST({ commit }, pageName) {
-    fetchList(pageName)
-      .then(({ data }) => {
-        commit("SET_LIST", data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+  // FETCH_LIST({ commit }, pageName) {
+  //   return fetchList(pageName)
+  //     .then(response => {
+  //       commit("SET_LIST", response.data);
+  //       return response;
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
+  async FETCH_LIST(context, pageName){
+    console.log(pageName);
+    const response = await fetchList(pageName);
+    context.commit('SET_LIST', response.data);
+    return response;
   }
 }; 

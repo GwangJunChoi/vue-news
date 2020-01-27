@@ -411,9 +411,20 @@ export default {
 ```
 # 컴포넌트 재활용 
 >##### mixin 
-
+* 여러 컴포넌트 간에 공통으로 사용하고 있는 로직, 기능들을 재사용하는 방법
+* 정의할 수 있는 재사용 로깆은 data, methods, created 등 컴포넌트 옵션
+```
+ex))
+var newMixins = {
+  //component options
+};
+new Vue({
+  mxins: [newMixins]
+});
+```
 >##### HOC
 * 컴포넌트 코드 재사용
+* 컴포넌트 깊이 깊어짐
 * 같은 ui/ux 재사용
 ```
 //views/createListView.js
@@ -486,3 +497,87 @@ export default {
 }
 </script>
 ```
+# [데이터 호출 시점]
+* 컴포넌트 라이프 사이클 훅
+  ** create
+# 라우터 네비게이션 가드
+  * 특정 URL 접근전 동작을 정의
+  * 특정 URL 접근시 해당 URL의 접근을 막는 방법
+  * [네비게이션 블로그 글](https://joshua1988.github.io/web-development/vuejs/vue-router-navigation-guards/)
+  * [네비게이션 가드 뷰 라어투 공식 문서](https://router.vuejs.org/guide/advanced/navigation-guards.html#global-guards)
+```
+export const router = new VueRouter({
+         mode: "history",
+         routes: [
+           {
+             // path: url 주소
+             path: "/news",
+             name: "news",
+             component: NewsView,
+             beforeEnter: (to, from, next) => {
+               //to 이동할 URL의 라우팅 정보
+               //from 현재 위치 URL
+               //next function 호출 해당 url로 이동
+               next();
+             }
+           },
+         ]
+       });
+```       
+```
+const Login = {
+  template: '<p>Login Component</p>',
+  beforeRouteEnter (to, from, next) {
+    // Login 컴포넌트가 화면에 표시되기 전에 수행될 로직
+    // Login 컴포넌트는 아직 생성되지 않은 시점
+  },
+  beforeRouteUpdate (to, from, next) {
+    // 화면에 표시된 컴포넌트가 변경될 때 수행될 로직
+    // `this`로 Login 컴포넌트를 접근할 수 있음
+  },
+  beforeRouteLeave (to, from, next) {
+    // Login 컴포넌트를 화면에 표시한 url 값이 변경되기 직전의 로직
+    // `this`로 Login 컴포넌트를 접근할 수 있음
+  }
+}
+```
+# async & await
+* 자바스크립트 비동기 처리 패턴
+* 비동기 -> 동기식으로 프로그래밍할 수 있게
+```
+aync function fetch() {
+  //Promise 객체를 반환하는 호출 함수 앞에 await
+  var data = await getFetch();
+  console.log(data);//[1, 2]
+}
+```
+```
+function getFetch(){
+  return new Promise(function(resolve, reject){
+    var data = ['1', '2'];
+    resolve(data);
+  });
+}
+```
+```
+FETCH_LIST({ commit }, pageName) {
+  return fetchList(pageName)
+    .then(response => {
+      commit("SET_LIST", response.data);
+      return response;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+```
+```
+async FETCH_LIST(context, pageName){
+  const response = await fetchList(pageName);
+  context.commit('SET_LIST', response.data);
+  return response;//어떤것을 리턴해도 promise 객체 리턴
+}
+```
+# 외부 라이브러리 모듈화
+* Vue.js 관련 라이브러리 없을 때 일반 라이브러리 결합
+* 차트, 데이트 피커, 테이블, 스피너 등등
