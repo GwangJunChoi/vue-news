@@ -578,6 +578,40 @@ async FETCH_LIST(context, pageName){
   return response;//어떤것을 리턴해도 promise 객체 리턴
 }
 ```
-# 외부 라이브러리 모듈화
-* Vue.js 관련 라이브러리 없을 때 일반 라이브러리 결합
-* 차트, 데이트 피커, 테이블, 스피너 등등
+# 컴포넌트 디자인 패턴
+1. Common - 기본적인 컴포넌트 등록과 컴포넌트 통신
+2. Slot - 마크업 확장이 가능한 컴포넌트
+3. Controlled - 결합력이 높은 컴포넌트
+4. Renderless - 데이터 처리 컴포넌트
+
+# 서비스 배포 환경 구성
+
+>##### npm 배포 명령어
+```
+npm run build
+```
+* dist 폴더 정적파일 생성
+* [netlify deployment](https://www.netlify.com/) 
+>##### SPA 호스팅시 서버 추가 설정
+* [vue배포 설명 페이지](https://cli.vuejs.org/guide/deployment.html#netlify)
+```
+# Netlify settings for single-page application
+/*    /index.html   200
+```
+* 환경 변수 파일을 이용한 옵션 설정
+```
+//.env
+//# Temp
+//변수=값
+# Temp
+VUE_변수=값
+VUE_APP_TITLE=TEST_TITLE
+```
+```
+//app.vue
+export default {
+  created() {
+    console.log(process.env.VUE_APP_TITLE);
+  }
+}
+```
